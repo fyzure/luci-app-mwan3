@@ -25,34 +25,21 @@ return baseclass.extend({
 
 		components.loadStyle();
 
-		var container = E('div', { 'id': 'mwan3-service-status' });
+		var container = E('div', { 'class': 'mwan3-flexwrap' });
 
 		for (var iface in result[0].interfaces) {
 			var d = result[0].interfaces[iface];
 			var si = components.statusInfo(d);
-			var css;
-
-			switch (si.severity) {
-				case 'success':
-					css = 'success';
-					break;
-				case 'danger':
-					css = 'danger';
-					break;
-				default:
-					css = 'warning';
-					break;
-			}
 
 			var children = [
 				E('div', {}, [ E('strong', {}, _('Interface') + ':\u00a0'), iface ]),
-				E('div', {}, [ E('strong', {}, _('Status') + ':\u00a0'), si.label ]),
+				E('div', {}, [ E('strong', {}, _('Status') + ':\u00a0'), components.statusText(si.label, si.severity) ]),
 			];
 
 			if (si.duration != null)
 				children.push(E('div', {}, [ E('strong', {}, si.durationLabel + ':\u00a0'), '%t'.format(si.duration) ]));
 
-			container.appendChild(E('div', { 'class': 'alert-message ' + css }, children));
+			container.appendChild(components.card(si.severity, children, 'mwan3-card--sm mwan3-card--grow'));
 		}
 
 		return container;
