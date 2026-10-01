@@ -22,16 +22,29 @@ function renderInterfaces(interfaces) {
 	return Object.keys(interfaces).map(function(iface) {
 		var d = interfaces[iface];
 		var si = components.statusInfo(d);
+		var css;
+
+		switch (si.severity) {
+			case 'success':
+				css = 'success';
+				break;
+			case 'danger':
+				css = 'danger';
+				break;
+			default:
+				css = 'warning';
+				break;
+		}
 
 		var children = [
 			E('div', {}, [ E('strong', {}, _('Interface') + ': '), iface ]),
-			E('div', {}, [ E('strong', {}, _('Status') + ': '), components.statusText(si.label, si.severity) ]),
+			E('div', {}, [ E('strong', {}, _('Status') + ': '), si.label ]),
 		];
 
 		if (si.duration != null)
-			children.push(E('div', {}, [ E('strong', {}, si.durationLabel + ': '), format.formatDuration(si.duration) ]));
+			children.push(E('div', {}, [ E('strong', {}, si.durationLabel + ': '), '%t'.format(si.duration) ]));
 
-		return components.card(si.severity, children, 'mwan3-card--sm');
+		return E('div', { 'class': 'alert-message ' + css }, children);
 	});
 }
 
@@ -109,7 +122,7 @@ return view.extend({
 		var result = data[0] || {};
 		var rules  = uci.sections('mwan3', 'rule');
 
-		var ifaceRegion  = E('div', { 'class': 'mwan3-grid' }, renderInterfaces(result.interfaces));
+		var ifaceRegion  = E('div', { 'id': 'mwan3-service-status' }, renderInterfaces(result.interfaces));
 		var policyRegion = E('div', { 'class': 'mwan3-grid' }, renderPolicies(result.policies));
 
 		var rulesTable = new ui.Table(

@@ -132,10 +132,10 @@ function statusInfo(d) {
 	switch (d.status) {
 		case 'online':
 			return { label: _('Online'), severity: 'success',
-			         duration: d.online, durationLabel: _('Online') };
+			         duration: d.online, durationLabel: _('Uptime') };
 		case 'offline':
 			return { label: _('Offline'), severity: 'danger',
-			         duration: d.offline, durationLabel: _('Offline') };
+			         duration: d.offline, durationLabel: _('Downtime') };
 		case 'notracking':
 			return { label: _('No Tracking'),
 			         severity: d.uptime > 0 ? 'success' : 'warning',
